@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserModel } from '../models/user.model.js';
-import { hashPassword, comparePassword } from '../utils/passwordUtils.js';
+import { UserModel } from '../models/user.model';
+import { hashPassword, comparePassword } from '../utils/passwordUtils';
+import { StreamChat } from 'stream-chat';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+
+const streamClient = StreamChat.getInstance(
+  process.env.STREAM_API_KEY || '',
+  process.env.STREAM_API_SECRET || ''
+);
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -23,13 +29,22 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = await hashPassword(password);
     const newUser = await UserModel.create(email, hashedPassword);
 
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, {
+    const jwtToken = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, {
       expiresIn: '24h',
     });
 
+    await streamClient.upsertUser({
+      id: newUser.id.toString(),
+      email,
+      name: newUser.email,
+    });
+
+    const streamToken = streamClient.createToken(newUser.id.toString());
+
     res.status(201).json({
       message: 'User registered successfully',
-      token,
+      jwtToken,
+      streamToken,
       user: {
         id: newUser.id,
         email: newUser.email,
@@ -62,13 +77,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+    const jwtToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: '24h',
     });
 
+    const streamToken = streamClient.createToken(user.id.toString());
+
     res.status(200).json({
       message: 'Login successful',
-      token,
+      jwtToken,
+      streamToken,
       user: {
         id: user.id,
         email: user.email,

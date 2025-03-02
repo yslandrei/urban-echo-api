@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",  // This ensures ES module syntax is used.
-    "moduleResolution": "NodeNext",  // To help Node.js resolve modules properly
-    "target": "ESNext",  // The target JavaScript version
-    "sourceMap": true,  // For compatibility with CommonJS modules
-    "outDir": "dist",
-  },
-  "include": ["src/**/*.ts"],
+    "sourceMap": true,
+    "outDir": "build",
+    "rootDir": "src/",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "target": "es6",
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "module": "CommonJS"
+  }
 }
