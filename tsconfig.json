@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",  // This ensures ES module syntax is used.
+    "moduleResolution": "NodeNext",  // To help Node.js resolve modules properly
+    "target": "ESNext",  // The target JavaScript version
+    "sourceMap": true,  // For compatibility with CommonJS modules
+    "outDir": "dist",
+  },
+  "include": ["src/**/*.ts"],
+}
