@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon",
     "prestart": "npm install && rimraf ./build && tsc",
-    "start": "node ./build/index.js "
+    "start": "node ./build/index.js ",
+    "postinstall": "npm install --save-dev @types/node @types/jsonwebtoken @types/cors @types/pg @types/express @types/pg @types/bcrypt @types/bcryptjs"
   },
   "keywords": [],
   "author": "",
