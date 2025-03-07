@@ -5,6 +5,13 @@ export interface User {
   id: number;
   email: string;
   password: string;
+  type: UserType;
+  languages: string;
+}
+
+export enum UserType {
+  volunteer = "volunteer",
+  blind = "blind",
 }
 
 export class UserModel {

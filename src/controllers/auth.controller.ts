@@ -52,6 +52,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       user: {
         id: newUser.id,
         email: newUser.email,
+        type: newUser.type,
+        languages: newUser.languages || [],
       },
     });
   } catch (error) {
@@ -94,6 +96,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       user: {
         id: user.id,
         email: user.email,
+        type: user.type,
+        languages: user.languages || [],
       },
     });
   } catch (error) {
