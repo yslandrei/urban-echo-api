@@ -1,6 +1,7 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import authRoutes from './routes/auth.routes';
+import express from "express";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
 
 dotenv.config();
 
@@ -11,7 +12,9 @@ const PORT = process.env.PORT || 5001;
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
+
+app.use("/api/user", userRoutes);
 
 // Start server
 app.listen(PORT, async () => {
