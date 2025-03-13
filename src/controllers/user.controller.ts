@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user.model";
+import { AuthRequest } from "../middleware/auth.middleware";
 
 export const setLanguages = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const { id, languages } = req.body;
+    const { languages } = req.body;
+    const id = req.user?.id;
+    if (!id) {
+      res.status(400).json({ error: "Not Authentificated" });
+      return;
+    }
 
     if (!languages) {
       res.status(400).json({ error: "Languages are required" });

@@ -40,4 +40,18 @@ export class UserModel {
     const query = "UPDATE users SET languages = $1 WHERE id = $2";
     await pool.query(query, [languages, id]);
   }
+
+  static async getLanguages(id: string): Promise<string[]> {
+    const query = "SELECT languages FROM users WHERE id = $1";
+    const result: QueryResult = await pool.query(query, [id]);
+    return result.rows[0].languages;
+  }
+
+  static async getVolunteersIdByLanguages(
+    languages: string
+  ): Promise<string[]> {
+    const query = `SELECT id FROM users WHERE type = 'volunteer' AND languages && ARRAY[${languages}]`;
+    const result: QueryResult = await pool.query(query);
+    return result.rows.map((row) => row.id);
+  }
 }

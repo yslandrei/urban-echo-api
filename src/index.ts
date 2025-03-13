@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import notificationRoutes from "./routes/notification.routes";
+import { initializeWebSocket } from "./utils/websocket";
 
 dotenv.config();
 
@@ -16,7 +18,10 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/user", userRoutes);
 
+app.use("/api/notification", notificationRoutes);
+
 // Start server
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 });
+initializeWebSocket(server);
