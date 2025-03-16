@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import http from "http";
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
@@ -12,17 +13,24 @@ interface NotificationData {
   callId: string;
 }
 
-export const initializeWebSocket = (server: any) => {
+export const initializeWebSocket = (server: http.Server) => {
   const io = new Server(server);
 
   io.on("connection", (socket: Socket) => {
     console.log(`New client connected: ${socket.id}`);
 
     socket.on("register", (token: string) => {
-      const decoded = jwt.verify(token, JWT_SECRET) as {
-        id: string;
-        email: string;
-      };
+      let decoded;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET) as {
+          id: string;
+          email: string;
+        };
+      } catch (error) {
+        console.error(`Client ${socket.id} sent invalid token: ${token}`);
+        socket.disconnect();
+        return;
+      }
       console.log(`Client ${socket.id} registered with userId: ${decoded.id}`);
       clients[decoded.id] = socket;
     });

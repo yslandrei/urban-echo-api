@@ -7,9 +7,4 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 
-// Example of a protected route
-router.post("/profile", authenticateToken, (req, res) => {
-  res.json({ user: "mama" });
-});
-
 export default router;

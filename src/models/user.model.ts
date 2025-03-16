@@ -2,11 +2,12 @@ import pool from "../config/database";
 import { QueryResult } from "pg";
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   password: string;
   type: UserType;
   languages: string;
+  friend_code: string;
 }
 
 export enum UserType {
@@ -18,6 +19,12 @@ export class UserModel {
   static async findByEmail(email: string): Promise<User | null> {
     const query = "SELECT * FROM users WHERE email = $1";
     const result: QueryResult = await pool.query(query, [email]);
+    return result.rows[0] || null;
+  }
+
+  static async findById(id: string): Promise<User | null> {
+    const query = "SELECT * FROM users WHERE id = $1";
+    const result: QueryResult = await pool.query(query, [id]);
     return result.rows[0] || null;
   }
 
@@ -53,5 +60,11 @@ export class UserModel {
     const query = `SELECT id FROM users WHERE type = 'volunteer' AND languages && ARRAY[${languages}]`;
     const result: QueryResult = await pool.query(query);
     return result.rows.map((row) => row.id);
+  }
+
+  static async getUserByFriendCode(friendCode: string): Promise<User | null> {
+    const query = "SELECT * FROM users WHERE friend_code = $1";
+    const result: QueryResult = await pool.query(query, [friendCode]);
+    return result.rows[0] || null;
   }
 }
