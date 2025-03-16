@@ -54,6 +54,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         email: newUser.email,
         type: newUser.type,
         languages: newUser.languages || [],
+        friendCode: newUser.friend_code,
       },
     });
   } catch (error) {
@@ -98,6 +99,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         email: user.email,
         type: user.type,
         languages: user.languages || [],
+        friendCode: user.friend_code,
       },
     });
   } catch (error) {
