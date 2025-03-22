@@ -43,8 +43,8 @@ export class DesignationModel {
   static async getVisuallyImpairedUsersDesignatedToVolunteerId(
     volunteer_id: string
   ): Promise<User[]> {
-    const query = `SELECT (users.id, users.email) FROM designations WHERE volunteer_id = $1 JOIN users ON users.id = designations.blind_id`;
+    const query = `SELECT users.id, users.email FROM designations JOIN users ON users.id = designations.blind_id WHERE designations.volunteer_id = $1`;
     const result: QueryResult = await pool.query(query, [volunteer_id]);
-    return result.rows.map((row) => row.blind_id);
+    return result.rows;
   }
 }
